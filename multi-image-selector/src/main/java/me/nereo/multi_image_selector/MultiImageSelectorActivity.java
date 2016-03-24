@@ -1,9 +1,11 @@
 package me.nereo.multi_image_selector;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
  * Created by Nereo on 2015/4/7.
  * Updated by nereo on 2016/1/19.
  */
-public class MultiImageSelectorActivity extends AppCompatActivity implements MultiImageSelectorFragment.Callback{
+public class MultiImageSelectorActivity extends FragmentActivity implements MultiImageSelectorFragment.Callback{
 
     /** 最大图片选择次数，int类型，默认9 */
     public static final String EXTRA_SELECT_COUNT = "max_select_count";
