@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">multi-image-selector</string>
     <string name="pictures">Pictures</string>
     <string name="folder_all">All Images</string>
     <string name="preview">Preview</string>

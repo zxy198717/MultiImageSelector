@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">多图选择器</string>
     <string name="pictures">图片</string>
     <string name="folder_all">所有照片</string>
     <string name="preview">预览</string>
