@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -85,10 +85,9 @@ public class FolderAdapter extends BaseAdapter {
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
                 if(mFolders.size()>0){
                     Folder f = mFolders.get(0);
-                    Picasso.with(mContext)
+                    Glide.with(mContext)
                             .load(new File(f.cover.path))
                             .error(R.drawable.default_error)
-                            .resizeDimen(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
                             .centerCrop()
                             .into(holder.cover);
                 }
@@ -153,10 +152,9 @@ public class FolderAdapter extends BaseAdapter {
             }
             // 显示图片
             if (data.cover != null) {
-                Picasso.with(mContext)
+                Glide.with(mContext)
                         .load(new File(data.cover.path))
                         .placeholder(R.drawable.default_error)
-                        .resizeDimen(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
                         .centerCrop()
                         .into(cover);
             }else{
