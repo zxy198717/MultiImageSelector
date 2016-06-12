@@ -8,11 +8,16 @@ public class Image {
     public String path;
     public String name;
     public long time;
+    public boolean isVideo;
 
     public Image(String path, String name, long time){
         this.path = path;
         this.name = name;
         this.time = time;
+    }
+
+    public void setVideo(boolean video) {
+        isVideo = video;
     }
 
     @Override

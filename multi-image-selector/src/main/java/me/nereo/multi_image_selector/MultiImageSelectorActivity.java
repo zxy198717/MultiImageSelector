@@ -26,6 +26,8 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
     public static final String EXTRA_SELECT_MODE = "select_count_mode";
     /** 是否显示相机，默认显示 */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
+    /** 是否显示视频，默认不显示 */
+    public static final String EXTRA_SHOW_VIDEO = "show_video";
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
     /** 默认选择集 */
@@ -58,6 +60,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_MODE, mode);
         bundle.putBoolean(MultiImageSelectorFragment.EXTRA_SHOW_CAMERA, isShow);
+        bundle.putBoolean(MultiImageSelectorFragment.EXTRA_SHOW_VIDEO, intent.getBooleanExtra(EXTRA_SHOW_VIDEO, false));
         bundle.putStringArrayList(MultiImageSelectorFragment.EXTRA_DEFAULT_SELECTED_LIST, resultList);
 
         getSupportFragmentManager().beginTransaction()

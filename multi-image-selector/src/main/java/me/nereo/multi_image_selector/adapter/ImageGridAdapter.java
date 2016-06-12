@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -193,11 +194,13 @@ public class ImageGridAdapter extends BaseAdapter {
         ImageView image;
         ImageView indicator;
         View mask;
+        TextView videoTextView;
 
         ViewHolder(View view){
             image = (ImageView) view.findViewById(R.id.image);
             indicator = (ImageView) view.findViewById(R.id.checkmark);
             mask = view.findViewById(R.id.mask);
+            videoTextView = (TextView) view.findViewById(R.id.videoTextView);
             view.setTag(this);
         }
 
@@ -224,6 +227,12 @@ public class ImageGridAdapter extends BaseAdapter {
                 Glide.with(mContext).load(imageFile).placeholder(R.drawable.default_error).centerCrop().into(image);
             }else{
                 image.setImageResource(R.drawable.default_error);
+            }
+
+            if (data.isVideo) {
+                videoTextView.setVisibility(View.VISIBLE);
+            } else {
+                videoTextView.setVisibility(View.GONE);
             }
         }
     }

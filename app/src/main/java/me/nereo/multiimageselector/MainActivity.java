@@ -81,6 +81,9 @@ public class MainActivity extends AppCompatActivity {
                 if(mSelectPath != null && mSelectPath.size()>0){
                     intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
                 }
+
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_VIDEO, true);
+
                 startActivityForResult(intent, REQUEST_IMAGE);
 
             }

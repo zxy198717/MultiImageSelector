@@ -7,4 +7,5 @@
     <string name="action_done">完成</string>
     <string name="photo_unit">张</string>
     <string name="tip_take_photo">拍摄照片</string>
+    <string name="video">视频</string>
 </resources>

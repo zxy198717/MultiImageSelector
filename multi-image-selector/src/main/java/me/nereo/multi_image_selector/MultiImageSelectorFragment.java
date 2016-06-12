@@ -55,6 +55,8 @@ public class MultiImageSelectorFragment extends Fragment {
     public static final String EXTRA_SELECT_MODE = "select_count_mode";
     /** 是否显示相机，boolean类型 */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
+    /** 是否显示相机，boolean类型 */
+    public static final String EXTRA_SHOW_VIDEO = "show_video";
     /** 默认选择的数据集 */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_result";
     /** 单选 */
@@ -93,6 +95,7 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private boolean hasFolderGened = false;
     private boolean mIsShowCamera = false;
+    private boolean mIsShowVideo = false;
 
     private File mTmpFile;
 
@@ -131,6 +134,8 @@ public class MultiImageSelectorFragment extends Fragment {
 
         // 是否显示照相机
         mIsShowCamera = getArguments().getBoolean(EXTRA_SHOW_CAMERA, true);
+        // 是否显示视频
+        mIsShowVideo = getArguments().getBoolean(EXTRA_SHOW_VIDEO, false);
         mImageAdapter = new ImageGridAdapter(getActivity(), mIsShowCamera, 3);
         // 是否显示选择指示器
         mImageAdapter.showSelectIndicator(mode == MODE_MULTI);
@@ -380,7 +385,7 @@ public class MultiImageSelectorFragment extends Fragment {
     }
 
     private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
-
+        /*
         private final String[] IMAGE_PROJECTION = {
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
@@ -388,15 +393,41 @@ public class MultiImageSelectorFragment extends Fragment {
                 MediaStore.Images.Media.MIME_TYPE,
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media._ID };
+        */
+        private final String[] IMAGE_PROJECTION = {
+                MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.DISPLAY_NAME,
+                MediaStore.Files.FileColumns.DATE_ADDED,
+                MediaStore.Files.FileColumns.MIME_TYPE,
+                MediaStore.Files.FileColumns.SIZE,
+                MediaStore.Images.Media._ID,
+                MediaStore.Files.FileColumns.MEDIA_TYPE,
+                 };
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
             if(id == LOADER_ALL) {
-                CursorLoader cursorLoader = new CursorLoader(getActivity(),
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        IMAGE_PROJECTION[4]+">0 AND "+IMAGE_PROJECTION[3]+"=? OR "+IMAGE_PROJECTION[3]+"=? ",
-                        new String[]{"image/jpeg", "image/png"}, IMAGE_PROJECTION[2] + " DESC");
-                return cursorLoader;
+                // Return only video and image metadata.
+                String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                        + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+
+                if (mIsShowVideo) {
+                    selection += " OR "
+                            + MediaStore.Files.FileColumns.MEDIA_TYPE + "="
+                            + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                }
+
+                Uri queryUri = MediaStore.Files.getContentUri("external");
+
+                CursorLoader cursorLoader = new CursorLoader(
+                        getActivity(),
+                        queryUri,
+                        IMAGE_PROJECTION,
+                        selection,
+                        null, // Selection args (none).
+                        MediaStore.Files.FileColumns.DATE_ADDED + " DESC" // Sort order.
+                );
+                return  cursorLoader;
             }else if(id == LOADER_CATEGORY){
                 CursorLoader cursorLoader = new CursorLoader(getActivity(),
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
@@ -425,9 +456,11 @@ public class MultiImageSelectorFragment extends Fragment {
                         String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                         String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                        int mediaType = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
                         Image image = null;
                         if (fileExist(path)) {
                             image = new Image(path, name, dateTime);
+                            image.setVideo(mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO);
                             images.add(image);
                         }
                         if( !hasFolderGened ) {
