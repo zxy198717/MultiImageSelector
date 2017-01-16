@@ -85,11 +85,13 @@ public class FolderAdapter extends BaseAdapter {
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
                 if(mFolders.size()>0){
                     Folder f = mFolders.get(0);
-                    Glide.with(mContext)
+                    if(f.cover != null && f.cover.path != null) {
+                        Glide.with(mContext)
                             .load(new File(f.cover.path))
                             .error(R.drawable.default_error)
                             .centerCrop()
                             .into(holder.cover);
+                    }
                 }
             }else {
                 holder.bindData(getItem(i));
