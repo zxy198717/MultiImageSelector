@@ -98,7 +98,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_MODE, mode);
         bundle.putBoolean(MultiImageSelectorFragment.EXTRA_SHOW_CAMERA, isShow);
-        bundle.putInt(MultiImageSelectorFragment.EXTRA_PICKER_MODE, intent.getIntExtra(EXTRA_PICKER_MODE, MODE_ALL));
+        bundle.putInt(MultiImageSelectorFragment.EXTRA_PICKER_MODE, intent.getIntExtra(EXTRA_PICKER_MODE, MODE_IMAGE));
         bundle.putInt(MultiImageSelectorFragment.EXTRA_VIDEO_DURATION, intent.getIntExtra(EXTRA_VIDEO_DURATION, 0));
         bundle.putStringArrayList(MultiImageSelectorFragment.EXTRA_DEFAULT_SELECTED_LIST, resultList);
 
