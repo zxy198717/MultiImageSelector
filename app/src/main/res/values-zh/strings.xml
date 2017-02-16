@@ -4,8 +4,12 @@
     <string name="action_settings">设置</string>
 
     <string name="select_mode">选择模式</string>
+    <string name="picker_mode">选择类型</string>
     <string name="mode_single">单选</string>
     <string name="mode_multi">多选</string>
+    <string name="mode_all">图片和视频</string>
+    <string name="mode_image">图片</string>
+    <string name="mode_video">视频</string>
     <string name="max_select_amount">最大选择数量</string>
     <string name="hint_default_amount">默认数量为9</string>
     <string name="enable_camera">是否启用照相机</string>

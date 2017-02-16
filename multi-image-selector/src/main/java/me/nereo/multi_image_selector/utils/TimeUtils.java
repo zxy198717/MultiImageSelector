@@ -31,4 +31,25 @@ public class TimeUtils {
         }
         return "1970-01-01";
     }
+
+    public static String getDurationStr(int duration) {
+        int hours = duration / 3600;
+        int minutes = (duration % 3600) / 60;
+        int seconds = duration % 60;
+
+        String result = "";
+        if (hours > 0) {
+            result = hours + ":";
+        }
+
+        if (minutes >= 0) {
+            result = result + (minutes >= 10 ? minutes : ("0"+minutes)) + ":";
+        }
+
+        if (seconds > 0) {
+            result = result + (seconds >= 10 ? seconds : ("0"+seconds)) + "";
+        }
+
+        return result;
+    }
 }

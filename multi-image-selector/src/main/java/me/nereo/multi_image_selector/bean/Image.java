@@ -9,6 +9,7 @@ public class Image {
     public String name;
     public long time;
     public boolean isVideo;
+    public int duration;
 
     public Image(String path, String name, long time){
         this.path = path;
@@ -16,8 +17,9 @@ public class Image {
         this.time = time;
     }
 
-    public void setVideo(boolean video) {
+    public void setVideo(boolean video, int duration) {
         isVideo = video;
+        this.duration = duration;
     }
 
     @Override

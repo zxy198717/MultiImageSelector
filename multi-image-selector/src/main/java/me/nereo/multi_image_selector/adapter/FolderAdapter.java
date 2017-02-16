@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.nereo.multi_image_selector.MultiImageSelectorFragment;
 import me.nereo.multi_image_selector.R;
 import me.nereo.multi_image_selector.bean.Folder;
 
@@ -26,6 +27,7 @@ public class FolderAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
+    private int pickerMode = MultiImageSelectorFragment.MODE_ALL;
 
     private List<Folder> mFolders = new ArrayList<>();
 
@@ -33,20 +35,25 @@ public class FolderAdapter extends BaseAdapter {
 
     int lastSelected = 0;
 
-    public FolderAdapter(Context context){
+    public FolderAdapter(Context context) {
         mContext = context;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mImageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.folder_cover_size);
     }
 
+    public void setPickerMode(int pickerMode) {
+        this.pickerMode = pickerMode;
+    }
+
     /**
      * 设置数据集
+     *
      * @param folders
      */
     public void setData(List<Folder> folders) {
-        if(folders != null && folders.size()>0){
+        if (folders != null && folders.size() > 0) {
             mFolders = folders;
-        }else{
+        } else {
             mFolders.clear();
         }
         notifyDataSetChanged();
@@ -54,13 +61,13 @@ public class FolderAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return mFolders.size()+1;
+        return mFolders.size() + 1;
     }
 
     @Override
     public Folder getItem(int i) {
-        if(i == 0) return null;
-        return mFolders.get(i-1);
+        if (i == 0) return null;
+        return mFolders.get(i - 1);
     }
 
     @Override
@@ -71,44 +78,44 @@ public class FolderAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder holder;
-        if(view == null){
+        if (view == null) {
             view = mInflater.inflate(R.layout.list_item_folder, viewGroup, false);
             holder = new ViewHolder(view);
-        }else{
+        } else {
             holder = (ViewHolder) view.getTag();
         }
         if (holder != null) {
-            if(i == 0){
-                holder.name.setText(R.string.folder_all);
+            if (i == 0) {
+                holder.name.setText(pickerMode == MultiImageSelectorFragment.MODE_ALL ? R.string.pictures_and_videos : (pickerMode == MultiImageSelectorFragment.MODE_IMAGE ? R.string.folder_all : R.string.folder_all_videos));
                 holder.path.setText("/sdcard");
                 holder.size.setText(String.format("%d%s",
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
-                if(mFolders.size()>0){
+                if (mFolders.size() > 0) {
                     Folder f = mFolders.get(0);
-                    if(f.cover != null && f.cover.path != null) {
+                    if (f.cover != null && f.cover.path != null) {
                         Glide.with(mContext)
-                            .load(new File(f.cover.path))
-                            .error(R.drawable.default_error)
-                            .centerCrop()
-                            .into(holder.cover);
+                                .load(new File(f.cover.path))
+                                .error(R.drawable.default_error)
+                                .centerCrop()
+                                .into(holder.cover);
                     }
                 }
-            }else {
+            } else {
                 holder.bindData(getItem(i));
             }
-            if(lastSelected == i){
+            if (lastSelected == i) {
                 holder.indicator.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 holder.indicator.setVisibility(View.INVISIBLE);
             }
         }
         return view;
     }
 
-    private int getTotalImageSize(){
+    private int getTotalImageSize() {
         int result = 0;
-        if(mFolders != null && mFolders.size()>0){
-            for (Folder f: mFolders){
+        if (mFolders != null && mFolders.size() > 0) {
+            for (Folder f : mFolders) {
                 result += f.images.size();
             }
         }
@@ -116,24 +123,25 @@ public class FolderAdapter extends BaseAdapter {
     }
 
     public void setSelectIndex(int i) {
-        if(lastSelected == i) return;
+        if (lastSelected == i) return;
 
         lastSelected = i;
         notifyDataSetChanged();
     }
 
-    public int getSelectIndex(){
+    public int getSelectIndex() {
         return lastSelected;
     }
 
-    class ViewHolder{
+    class ViewHolder {
         ImageView cover;
         TextView name;
         TextView path;
         TextView size;
         ImageView indicator;
-        ViewHolder(View view){
-            cover = (ImageView)view.findViewById(R.id.cover);
+
+        ViewHolder(View view) {
+            cover = (ImageView) view.findViewById(R.id.cover);
             name = (TextView) view.findViewById(R.id.name);
             path = (TextView) view.findViewById(R.id.path);
             size = (TextView) view.findViewById(R.id.size);
@@ -142,15 +150,15 @@ public class FolderAdapter extends BaseAdapter {
         }
 
         void bindData(Folder data) {
-            if(data == null){
+            if (data == null) {
                 return;
             }
             name.setText(data.name);
             path.setText(data.path);
             if (data.images != null) {
                 size.setText(String.format("%d%s", data.images.size(), mContext.getResources().getString(R.string.photo_unit)));
-            }else{
-                size.setText("*"+mContext.getResources().getString(R.string.photo_unit));
+            } else {
+                size.setText("*" + mContext.getResources().getString(R.string.photo_unit));
             }
             // 显示图片
             if (data.cover != null) {
@@ -159,7 +167,7 @@ public class FolderAdapter extends BaseAdapter {
                         .placeholder(R.drawable.default_error)
                         .centerCrop()
                         .into(cover);
-            }else{
+            } else {
                 cover.setImageResource(R.drawable.default_error);
             }
         }

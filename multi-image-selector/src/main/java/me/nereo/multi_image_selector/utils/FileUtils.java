@@ -18,8 +18,18 @@ public class FileUtils {
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
+    private static final String VIDEO_FILE_PREFIX = "VIDEO_";
+    private static final String VIDEO_FILE_SUFFIX = ".mp4";
 
     public static File createTmpFile(Context context) throws IOException{
+        return createTmpFile(context, JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+    }
+
+    public static File createVideoTmpFile(Context context) throws IOException{
+        return createTmpFile(context, VIDEO_FILE_PREFIX, VIDEO_FILE_SUFFIX);
+    }
+
+    public static File createTmpFile(Context context, String prefix, String suffix) throws IOException{
         File dir = null;
         if(TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
@@ -32,7 +42,7 @@ public class FileUtils {
         }else{
             dir = getCacheDirectory(context, true);
         }
-        return File.createTempFile(JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX, dir);
+        return File.createTempFile(prefix, suffix, dir);
     }
 
 

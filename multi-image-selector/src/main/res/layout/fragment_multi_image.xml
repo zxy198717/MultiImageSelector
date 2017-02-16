@@ -35,20 +35,18 @@
             android:drawableRight="@drawable/text_indicator"
             android:drawablePadding="5dp"
             android:background="@null"
-            android:singleLine="true"
+            android:maxLines="1"
             android:ellipsize="end"
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
 
         <View
-            android:visibility="gone"
             android:layout_toLeftOf="@+id/preview"
             android:layout_width="1dp"
             android:background="#8828292A"
             android:layout_height="match_parent" />
 
         <Button
-            android:visibility="gone"
             android:id="@+id/preview"
             tools:text="预览(1)"
             android:paddingLeft="16dp"

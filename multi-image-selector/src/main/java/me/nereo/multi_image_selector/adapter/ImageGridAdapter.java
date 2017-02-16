@@ -3,10 +3,12 @@ package me.nereo.multi_image_selector.adapter;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import me.nereo.multi_image_selector.R;
 import me.nereo.multi_image_selector.bean.Image;
+import me.nereo.multi_image_selector.utils.TimeUtils;
 
 /**
  * 图片Adapter
@@ -27,6 +30,10 @@ import me.nereo.multi_image_selector.bean.Image;
  */
 public class ImageGridAdapter extends BaseAdapter {
 
+    public interface OnItemCheckboxClickListener {
+        void onClick(int position);
+    }
+
     private static final int TYPE_CAMERA = 0;
     private static final int TYPE_NORMAL = 1;
 
@@ -34,10 +41,13 @@ public class ImageGridAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private boolean showCamera = true;
+    private boolean recordVideo = false;
+    private int maxDuration = 0;
     private boolean showSelectIndicator = true;
 
     private List<Image> mImages = new ArrayList<>();
     private List<Image> mSelectedImages = new ArrayList<>();
+    private OnItemCheckboxClickListener onItemCheckboxClickListener;
 
     final int mGridWidth;
 
@@ -69,6 +79,16 @@ public class ImageGridAdapter extends BaseAdapter {
 
         showCamera = b;
         notifyDataSetChanged();
+    }
+
+    public void setRecordVideo(boolean recordVideo, int duration) {
+        this.recordVideo = recordVideo;
+        this.maxDuration = duration;
+        notifyDataSetChanged();
+    }
+
+    public void setOnItemCheckboxClickListener(OnItemCheckboxClickListener onItemCheckboxClickListener) {
+        this.onItemCheckboxClickListener = onItemCheckboxClickListener;
     }
 
     public boolean isShowCamera(){
@@ -160,17 +180,32 @@ public class ImageGridAdapter extends BaseAdapter {
         }
     }
 
+    public List<Image> getImages() {
+        return mImages;
+    }
+
+    public List<Image> getSelectedImages() {
+        return mSelectedImages;
+    }
+
     @Override
     public long getItemId(int i) {
         return i;
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
 
         if(isShowCamera()){
             if(i == 0){
                 view = mInflater.inflate(R.layout.list_item_camera, viewGroup, false);
+                TextView textView = (TextView) view.findViewById(R.id.tipTextView);
+                if (recordVideo) {
+                    textView.setText(R.string.tip_take_video);
+                    if (maxDuration > 0) {
+                        textView.setText(viewGroup.getContext().getString(R.string.tip_take_video_duration, TimeUtils.getDurationStr(maxDuration)));
+                    }
+                }
                 return view;
             }
         }
@@ -186,6 +221,15 @@ public class ImageGridAdapter extends BaseAdapter {
         if(holder != null) {
             holder.bindData(getItem(i));
         }
+
+        holder.indicator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onItemCheckboxClickListener != null) {
+                    onItemCheckboxClickListener.onClick(i);
+                }
+            }
+        });
 
         return view;
     }
@@ -231,6 +275,7 @@ public class ImageGridAdapter extends BaseAdapter {
 
             if (data.isVideo) {
                 videoTextView.setVisibility(View.VISIBLE);
+                videoTextView.setText(TimeUtils.getDurationStr(data.duration/1000));
             } else {
                 videoTextView.setVisibility(View.GONE);
             }

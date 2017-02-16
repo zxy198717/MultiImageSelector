@@ -1,11 +1,9 @@
 package me.nereo.multiimageselector;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 
@@ -24,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE = 2;
 
     private TextView mResultText;
-    private RadioGroup mChoiceMode, mShowCamera;
+    private RadioGroup mChoiceMode, mShowCamera, mPickerMode;
     private EditText mRequestNum;
 
     private ArrayList<String> mSelectPath;
@@ -37,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         mResultText = (TextView) findViewById(R.id.result);
         mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
         mShowCamera = (RadioGroup) findViewById(R.id.show_camera);
+        mPickerMode = (RadioGroup) findViewById(R.id.picker_mode);
         mRequestNum = (EditText) findViewById(R.id.request_num);
 
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -70,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
                     maxNum = Integer.valueOf(mRequestNum.getText().toString());
                 }
 
+                int pickMode = MultiImageSelectorActivity.MODE_ALL;
+                if(mPickerMode.getCheckedRadioButtonId() == R.id.image){
+                    pickMode = MultiImageSelectorActivity.MODE_IMAGE;
+                }else if (mPickerMode.getCheckedRadioButtonId() == R.id.video){
+                    pickMode = MultiImageSelectorActivity.MODE_VIDEO;
+                }
+
                 Intent intent = new Intent(MainActivity.this, MultiImageSelectorActivity.class);
                 // 是否显示拍摄图片
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, showCamera);
@@ -77,12 +82,14 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, maxNum);
                 // 选择模式
                 intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, selectedMode);
+                // 选择类型模式
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_PICKER_MODE, pickMode);
                 // 默认选择
                 if(mSelectPath != null && mSelectPath.size()>0){
                     intent.putExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mSelectPath);
                 }
 
-                intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_VIDEO, true);
+                intent.putExtra(MultiImageSelectorActivity.EXTRA_VIDEO_DURATION, 15);
 
                 startActivityForResult(intent, REQUEST_IMAGE);
 

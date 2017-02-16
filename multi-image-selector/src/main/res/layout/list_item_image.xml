@@ -22,8 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
-        android:layout_marginRight="5.5dp"
-        android:layout_marginTop="5.5dp"
+        android:paddingRight="5.5dp"
+        android:paddingTop="5.5dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
         android:src="@drawable/btn_unselected" />
 
     <TextView
@@ -31,11 +33,13 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_gravity="bottom"
-        android:background="#cc000000"
+        android:background="#aa000000"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
+        android:drawableLeft="@drawable/ms_icon_video"
         android:text="视频"
+        android:drawablePadding="10dp"
         android:textColor="#ffffff"
-        android:visibility="gone" />
+         />
 
 </me.nereo.multi_image_selector.view.SquareFrameLayout>

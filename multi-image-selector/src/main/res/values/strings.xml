@@ -7,5 +7,11 @@
     <string name="action_done">Done</string>
     <string name="photo_unit">Shot</string>
     <string name="tip_take_photo">Take photo</string>
+    <string name="tip_take_video">Take video</string>
+    <string name="tip_take_video_duration">Limit %s</string>
     <string name="video">Video</string>
+    <string name="videos">Videos</string>
+    <string name="pictures_and_videos">Pictures and videos</string>
+    <string name="folder_all_videos">All Videos</string>
+    <string name="msg_duration_limit">Video duration is limit</string>
 </resources>

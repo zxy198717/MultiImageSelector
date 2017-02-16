@@ -7,5 +7,11 @@
     <string name="action_done">完成</string>
     <string name="photo_unit">张</string>
     <string name="tip_take_photo">拍摄照片</string>
+    <string name="tip_take_video">拍摄视频</string>
+    <string name="tip_take_video_duration">限时 %s</string>
     <string name="video">视频</string>
+    <string name="videos">视频</string>
+    <string name="pictures_and_videos">图片和视频</string>
+    <string name="folder_all_videos">所有视频</string>
+    <string name="msg_duration_limit">视频时长超出限制</string>
 </resources>

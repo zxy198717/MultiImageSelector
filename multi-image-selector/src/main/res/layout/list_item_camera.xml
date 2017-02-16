@@ -4,6 +4,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/tipTextView"
         android:drawableTop="@drawable/asy"
         android:drawablePadding="10dp"
         android:layout_gravity="center"
