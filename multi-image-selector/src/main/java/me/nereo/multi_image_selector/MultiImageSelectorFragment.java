@@ -142,7 +142,7 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private boolean hasFolderGened = false;
     private boolean mIsShowCamera = false;
-    private int pickerMode = MODE_ALL;
+    private int pickerMode = MODE_IMAGE;
 
     private File mTmpFile;
 
