@@ -92,7 +92,7 @@ public class MultiImageSelectorActivity extends FragmentActivity implements Mult
             resultList = intent.getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
         }
 
-        int pickerMode = intent.getIntExtra(EXTRA_PICKER_MODE, MODE_ALL);
+        int pickerMode = intent.getIntExtra(EXTRA_PICKER_MODE, MODE_IMAGE);
 
         Bundle bundle = new Bundle();
         bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
