@@ -219,6 +219,9 @@ public class MultiImageSelectorFragment extends Fragment {
         if (resultList == null || resultList.size() <= 0) {
             mPreviewBtn.setText(R.string.preview);
             mPreviewBtn.setEnabled(false);
+        } else {
+            mPreviewBtn.setText(getResources().getString(R.string.preview) + "(" + resultList.size() + ")");
+            mPreviewBtn.setEnabled(true);
         }
         mPreviewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
