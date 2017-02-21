@@ -247,7 +247,7 @@ public class PreviewActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        String type = "video/* ";
+                        String type = "video/*";
                         Uri uri = Uri.parse(photos.get(position).path);
                         intent.setDataAndType(uri, type);
                         startActivity(intent);
