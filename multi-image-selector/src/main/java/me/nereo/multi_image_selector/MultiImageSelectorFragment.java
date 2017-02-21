@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -170,7 +171,7 @@ public class MultiImageSelectorFragment extends Fragment {
 
         // 选择图片数量
         mDesireImageCount = getArguments().getInt(EXTRA_SELECT_COUNT);
-        maxDuration =  getArguments().getInt(EXTRA_VIDEO_DURATION);
+        maxDuration = getArguments().getInt(EXTRA_VIDEO_DURATION);
         // 图片选择模式
         final int mode = getArguments().getInt(EXTRA_SELECT_MODE);
 
@@ -248,7 +249,7 @@ public class MultiImageSelectorFragment extends Fragment {
                     } else {
                         if (mode == MODE_SINGLE) {
                             Image image = (Image) mImageAdapter.getItem(i);
-                            if (image.isVideo && maxDuration > 0 && (int)(image.duration/1000) > maxDuration) {
+                            if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
                                 Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
                                 return;
                             }
@@ -261,7 +262,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         Intent intent = new Intent(getContext(), PreviewActivity.class);
                         PreviewActivity.images = (ArrayList<Image>) mImageAdapter.getImages();
                         PreviewActivity.selectImages = (ArrayList<Image>) mImageAdapter.getSelectedImages();
-                        PreviewActivity.position = i-1;
+                        PreviewActivity.position = i - 1;
                         PreviewActivity.maxCount = mDesireImageCount;
                         PreviewActivity.maxDuration = maxDuration;
                         startActivityForResult(intent, REQUEST_PREVIEW);
@@ -269,7 +270,7 @@ public class MultiImageSelectorFragment extends Fragment {
                 } else {
                     if (mode == MODE_SINGLE) {
                         Image image = (Image) mImageAdapter.getItem(i);
-                        if (image.isVideo && maxDuration > 0 && (int)(image.duration/1000) > maxDuration) {
+                        if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
                             Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -403,6 +404,24 @@ public class MultiImageSelectorFragment extends Fragment {
         } else if (REQUEST_RECORDING == requestCode) {
             if (resultCode == RESULT_OK) {
                 if (mTmpFile != null) {
+                    if (maxDuration > 0) {
+                        MediaPlayer mediaPlayer = new MediaPlayer();
+                        try {
+                            mediaPlayer.setDataSource(mTmpFile.getPath());
+                            mediaPlayer.prepare();
+                            int duration = mediaPlayer.getDuration();
+                            if ((int) duration / 1000 > maxDuration) {
+                                Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } finally {
+                            mediaPlayer.release();
+                        }
+
+                    }
+
                     if (mCallback != null) {
                         mCallback.onCameraShot(mTmpFile);
                     }
@@ -421,7 +440,7 @@ public class MultiImageSelectorFragment extends Fragment {
             if (mCallback != null) {
                 resultList.clear();
                 ArrayList<String> paths = new ArrayList<>();
-                for (Image image: mImageAdapter.getSelectedImages()) {
+                for (Image image : mImageAdapter.getSelectedImages()) {
                     paths.add(image.path);
                     resultList.add(image.path);
                 }
@@ -509,7 +528,7 @@ public class MultiImageSelectorFragment extends Fragment {
      * @param image
      */
     private void selectImageFromGrid(Image image, int mode) {
-        if (image.isVideo && maxDuration > 0 && (int)(image.duration/1000) > maxDuration) {
+        if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
             Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -713,13 +732,13 @@ public class MultiImageSelectorFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE ) {
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
             if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 // Permission Granted
                 getActivity().getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
             } else {
                 // Permission Denied
-                Toast.makeText(getActivity(), "在设置-应用-"+getApplicationName()+"-权限中开启相机与储存空间权限，以正常使用拍照", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "在设置-应用-" + getApplicationName() + "-权限中开启相机与储存空间权限，以正常使用拍照", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
         }
