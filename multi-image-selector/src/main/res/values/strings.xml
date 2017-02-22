@@ -3,7 +3,9 @@
     <string name="folder_all">All Images</string>
     <string name="preview">Preview</string>
     <string name="msg_no_camera">No system camera found</string>
-    <string name="msg_amount_limit">Select images amount is limit</string>
+    <string name="msg_amount_limit">Select images or videos amount is limit %d</string>
+    <string name="msg_image_amount_limit">Select images amount is limit %d</string>
+    <string name="msg_video_amount_limit">Select videos amount is limit %d</string>
     <string name="action_done">Done</string>
     <string name="photo_unit">Shot</string>
     <string name="tip_take_photo">Take photo</string>
@@ -13,5 +15,5 @@
     <string name="videos">Videos</string>
     <string name="pictures_and_videos">Pictures and videos</string>
     <string name="folder_all_videos">All Videos</string>
-    <string name="msg_duration_limit">Video duration is limit</string>
+    <string name="msg_duration_limit">Video duration limit is %d seconds</string>
 </resources>

@@ -3,7 +3,9 @@
     <string name="folder_all">所有照片</string>
     <string name="preview">预览</string>
     <string name="msg_no_camera">没有系统相机</string>
-    <string name="msg_amount_limit">已经达到最高选择数量</string>
+    <string name="msg_amount_limit">最多只能选择 %d 个照片或者视频</string>
+    <string name="msg_image_amount_limit">最多只能选择 %d 张照片</string>
+    <string name="msg_video_amount_limit">最多只能选择 %d 个视频</string>
     <string name="action_done">完成</string>
     <string name="photo_unit">张</string>
     <string name="tip_take_photo">拍摄照片</string>
@@ -13,5 +15,5 @@
     <string name="videos">视频</string>
     <string name="pictures_and_videos">图片和视频</string>
     <string name="folder_all_videos">所有视频</string>
-    <string name="msg_duration_limit">视频时长超出限制</string>
+    <string name="msg_duration_limit">只能上传 %d 秒以内的视频</string>
 </resources>

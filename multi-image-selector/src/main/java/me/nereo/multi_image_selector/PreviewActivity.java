@@ -44,6 +44,7 @@ public class PreviewActivity extends AppCompatActivity {
     public static int position = 0;
     public static int maxCount = 9;
     public static int maxDuration = 0;
+    public static int pickerMode;
 
     ViewPager viewpager;
     ViewGroup barLayout, footer;
@@ -110,13 +111,20 @@ public class PreviewActivity extends AppCompatActivity {
                 Image image = images.get(viewpager.getCurrentItem());
                 if (checkBox.isChecked()) {
                     if (selectImages.size() >= maxCount) {
-                        Toast.makeText(PreviewActivity.this, R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
+
+                        int resId = R.string.msg_amount_limit;
+                        if (pickerMode == MultiImageSelectorFragment.MODE_IMAGE) {
+                            resId = R.string.msg_image_amount_limit;
+                        } else if (pickerMode == MultiImageSelectorFragment.MODE_VIDEO) {
+                            resId = R.string.msg_video_amount_limit;
+                        }
+                        Toast.makeText(PreviewActivity.this, getString(resId, maxCount), Toast.LENGTH_SHORT).show();
                         checkBox.setChecked(false);
                         return;
                     }
 
                     if (image.isVideo && maxDuration > 0 && (int)(image.duration/1000) > maxDuration) {
-                        Toast.makeText(PreviewActivity.this, R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PreviewActivity.this, getString(R.string.msg_duration_limit, maxDuration), Toast.LENGTH_SHORT).show();
                         checkBox.setChecked(false);
                         return;
                     }

@@ -233,6 +233,7 @@ public class MultiImageSelectorFragment extends Fragment {
                 PreviewActivity.position = 0;
                 PreviewActivity.maxCount = mDesireImageCount;
                 PreviewActivity.maxDuration = maxDuration;
+                PreviewActivity.pickerMode = pickerMode;
                 startActivityForResult(intent, REQUEST_PREVIEW);
             }
         });
@@ -250,7 +251,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         if (mode == MODE_SINGLE) {
                             Image image = (Image) mImageAdapter.getItem(i);
                             if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
-                                Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.msg_duration_limit, maxDuration), Toast.LENGTH_SHORT).show();
                                 return;
                             }
                             // 单选模式
@@ -265,13 +266,14 @@ public class MultiImageSelectorFragment extends Fragment {
                         PreviewActivity.position = i - 1;
                         PreviewActivity.maxCount = mDesireImageCount;
                         PreviewActivity.maxDuration = maxDuration;
+                        PreviewActivity.pickerMode = pickerMode;
                         startActivityForResult(intent, REQUEST_PREVIEW);
                     }
                 } else {
                     if (mode == MODE_SINGLE) {
                         Image image = (Image) mImageAdapter.getItem(i);
                         if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
-                            Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getString(R.string.msg_duration_limit, maxDuration), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         // 单选模式
@@ -286,6 +288,7 @@ public class MultiImageSelectorFragment extends Fragment {
                     PreviewActivity.position = i;
                     PreviewActivity.maxCount = mDesireImageCount;
                     PreviewActivity.maxDuration = maxDuration;
+                    PreviewActivity.pickerMode = pickerMode;
                     startActivityForResult(intent, REQUEST_PREVIEW);
                 }
             }
@@ -411,7 +414,7 @@ public class MultiImageSelectorFragment extends Fragment {
                             mediaPlayer.prepare();
                             int duration = mediaPlayer.getDuration();
                             if ((int) duration / 1000 > maxDuration) {
-                                Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), getString(R.string.msg_duration_limit, maxDuration), Toast.LENGTH_SHORT).show();
                                 return;
                             }
                         } catch (IOException e) {
@@ -529,7 +532,7 @@ public class MultiImageSelectorFragment extends Fragment {
      */
     private void selectImageFromGrid(Image image, int mode) {
         if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
-            Toast.makeText(getActivity(), R.string.msg_duration_limit, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.msg_duration_limit, maxDuration), Toast.LENGTH_SHORT).show();
             return;
         }
         if (image != null) {
@@ -550,7 +553,13 @@ public class MultiImageSelectorFragment extends Fragment {
                 } else {
                     // 判断选择数量问题
                     if (mDesireImageCount == resultList.size()) {
-                        Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
+                        int resId = R.string.msg_amount_limit;
+                        if (pickerMode == MODE_IMAGE) {
+                            resId = R.string.msg_image_amount_limit;
+                        } else if (pickerMode == MODE_VIDEO) {
+                            resId = R.string.msg_video_amount_limit;
+                        }
+                        Toast.makeText(getActivity(), getString(resId, mDesireImageCount), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
