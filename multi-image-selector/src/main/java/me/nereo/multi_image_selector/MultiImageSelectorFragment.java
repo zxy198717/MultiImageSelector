@@ -304,7 +304,12 @@ public class MultiImageSelectorFragment extends Fragment {
 
         mFolderAdapter = new FolderAdapter(getActivity());
         mFolderAdapter.setPickerMode(pickerMode);
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        } else {
+            getActivity().getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
+        }
     }
 
     /**
