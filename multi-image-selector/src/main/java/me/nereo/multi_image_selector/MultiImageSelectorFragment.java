@@ -670,6 +670,8 @@ public class MultiImageSelectorFragment extends Fragment {
                             image = new Image(path, name, dateTime);
                             image.setVideo(mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO, duration);
                             images.add(image);
+                        } else {
+                            continue;
                         }
                         if (!hasFolderGened) {
                             // 获取文件夹名称
