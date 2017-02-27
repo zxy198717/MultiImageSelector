@@ -2,6 +2,7 @@ package me.nereo.multi_image_selector;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -13,6 +14,7 @@ import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -22,6 +24,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.content.FileProvider;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.ListPopupWindow;
 import android.text.TextUtils;
@@ -498,7 +501,15 @@ public class MultiImageSelectorFragment extends Fragment {
                     e.printStackTrace();
                 }
                 if (mTmpFile != null && mTmpFile.exists()) {
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        ContentValues contentValues = new ContentValues(1);
+                        contentValues.put(MediaStore.Images.Media.DATA, mTmpFile.getAbsolutePath());
+                        Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                    } else {
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
+                    }
+
                     startActivityForResult(intent, REQUEST_RECORDING);
                 } else {
                     Toast.makeText(getActivity(), "新建文件错误", Toast.LENGTH_SHORT).show();
@@ -520,7 +531,14 @@ public class MultiImageSelectorFragment extends Fragment {
                 e.printStackTrace();
             }
             if (mTmpFile != null && mTmpFile.exists()) {
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    ContentValues contentValues = new ContentValues(1);
+                    contentValues.put(MediaStore.Images.Media.DATA, mTmpFile.getAbsolutePath());
+                    Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                } else {
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
+                }
                 startActivityForResult(cameraIntent, REQUEST_CAMERA);
             } else {
                 Toast.makeText(getActivity(), "图片错误", Toast.LENGTH_SHORT).show();
