@@ -10,6 +10,7 @@ public class Image {
     public long time;
     public boolean isVideo;
     public int duration;
+    public long id;
 
     public Image(String path, String name, long time){
         this.path = path;

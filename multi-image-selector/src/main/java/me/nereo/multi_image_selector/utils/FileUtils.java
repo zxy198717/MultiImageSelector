@@ -1,8 +1,12 @@
 package me.nereo.multi_image_selector.utils;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -21,17 +25,17 @@ public class FileUtils {
     private static final String VIDEO_FILE_PREFIX = "VIDEO_";
     private static final String VIDEO_FILE_SUFFIX = ".mp4";
 
-    public static File createTmpFile(Context context) throws IOException{
+    public static File createTmpFile(Context context) throws IOException {
         return createTmpFile(context, JPEG_FILE_PREFIX, JPEG_FILE_SUFFIX);
     }
 
-    public static File createVideoTmpFile(Context context) throws IOException{
+    public static File createVideoTmpFile(Context context) throws IOException {
         return createTmpFile(context, VIDEO_FILE_PREFIX, VIDEO_FILE_SUFFIX);
     }
 
-    public static File createTmpFile(Context context, String prefix, String suffix) throws IOException{
+    public static File createTmpFile(Context context, String prefix, String suffix) throws IOException {
         File dir = null;
-        if(TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
             dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
             if (!dir.exists()) {
                 dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
@@ -39,7 +43,7 @@ public class FileUtils {
                     dir = getCacheDirectory(context, true);
                 }
             }
-        }else{
+        } else {
             dir = getCacheDirectory(context, true);
         }
         return File.createTempFile(prefix, suffix, dir);
@@ -101,7 +105,7 @@ public class FileUtils {
      * created on SD card <i>("/Android/data/[app_package_name]/cache/uil-images")</i> if card is mounted and app has
      * appropriate permission. Else - Android defines cache directory on device's file system.
      *
-     * @param context Application context
+     * @param context  Application context
      * @param cacheDir Cache directory path (e.g.: "AppCacheDir", "AppDir/cache/images")
      * @return Cache {@link File directory}
      */
@@ -135,5 +139,4 @@ public class FileUtils {
         int perm = context.checkCallingOrSelfPermission(EXTERNAL_STORAGE_PERMISSION);
         return perm == PackageManager.PERMISSION_GRANTED;
     }
-
 }

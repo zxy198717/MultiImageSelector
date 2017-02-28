@@ -686,6 +686,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         Image image = null;
                         if (fileExist(path)) {
                             image = new Image(path, name, dateTime);
+                            image.id = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
                             image.setVideo(mediaType == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO, duration);
                             images.add(image);
                         } else {

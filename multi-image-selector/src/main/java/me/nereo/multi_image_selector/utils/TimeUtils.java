@@ -46,7 +46,7 @@ public class TimeUtils {
             result = result + (minutes >= 10 ? minutes : ("0"+minutes)) + ":";
         }
 
-        if (seconds > 0) {
+        if (seconds >= 0) {
             result = result + (seconds >= 10 ? seconds : ("0"+seconds)) + "";
         }
 

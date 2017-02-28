@@ -1,11 +1,14 @@
 package me.nereo.multi_image_selector;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -26,9 +29,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import me.nereo.multi_image_selector.bean.Image;
+import me.nereo.multi_image_selector.utils.FileUtils;
 import me.nereo.multi_image_selector.utils.ScreenUtils;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -123,7 +128,7 @@ public class PreviewActivity extends AppCompatActivity {
                         return;
                     }
 
-                    if (image.isVideo && maxDuration > 0 && (int)(image.duration/1000) > maxDuration) {
+                    if (image.isVideo && maxDuration > 0 && (int) (image.duration / 1000) > maxDuration) {
                         Toast.makeText(PreviewActivity.this, getString(R.string.msg_duration_limit, maxDuration), Toast.LENGTH_SHORT).show();
                         checkBox.setChecked(false);
                         return;
@@ -246,7 +251,6 @@ public class PreviewActivity extends AppCompatActivity {
                         onItemTap();
                     }
                 });
-
             }
 
             if (photos.get(position).isVideo) {
@@ -254,11 +258,22 @@ public class PreviewActivity extends AppCompatActivity {
                 playImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        String type = "video/*";
-                        Uri uri = Uri.parse(photos.get(position).path);
-                        intent.setDataAndType(uri, type);
-                        startActivity(intent);
+                        try {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            String type = "video/*";
+                            File mTmpFile = new File(photos.get(position).path);
+
+                            Uri uri = null;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, photos.get(position).id);
+                            } else {
+                                uri = Uri.fromFile(mTmpFile);
+                            }
+                            intent.setDataAndType(uri, type);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Toast.makeText(PreviewActivity.this, "未找到播放器", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             } else {
