@@ -258,6 +258,10 @@ public class PreviewActivity extends AppCompatActivity {
                 playImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Intent intent = new Intent(PreviewActivity.this, VideoPreviewActivity.class);
+                        intent.putExtra(VideoPreviewActivity.VIDEO_PATH, photos.get(position).path);
+                        startActivity(intent);
+                        /*
                         try {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             String type = "video/*";
@@ -273,7 +277,7 @@ public class PreviewActivity extends AppCompatActivity {
                             startActivity(intent);
                         } catch (Exception e) {
                             Toast.makeText(PreviewActivity.this, "未找到播放器", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                     }
                 });
             } else {

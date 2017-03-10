@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application android:allowBackup="true">
 
@@ -14,6 +15,17 @@
         <activity
             android:name="me.nereo.multi_image_selector.PreviewActivity"
             android:configChanges="orientation|screenSize" />
+
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+        <activity
+            android:name="com.afollestad.materialcamera.CaptureActivity2"
+            android:theme="@style/MaterialCamera.CaptureActivity" />
+
+        <activity
+            android:name=".VideoPreviewActivity"
+            android:configChanges="orientation|keyboardHidden|screenLayout|screenSize" />
     </application>
 
 </manifest>

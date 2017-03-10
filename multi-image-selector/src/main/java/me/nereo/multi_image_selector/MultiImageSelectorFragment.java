@@ -16,7 +16,9 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +38,8 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.afollestad.materialcamera.MaterialCamera;
 
 import java.io.File;
 import java.io.IOException;
@@ -308,8 +312,8 @@ public class MultiImageSelectorFragment extends Fragment {
         mFolderAdapter = new FolderAdapter(getActivity());
         mFolderAdapter.setPickerMode(pickerMode);
 
-        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
         } else {
             getActivity().getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
         }
@@ -414,6 +418,20 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         } else if (REQUEST_RECORDING == requestCode) {
             if (resultCode == RESULT_OK) {
+
+                String path = data.getDataString().replace("file:/", "");
+                File video = new File(path);
+                if (video.exists()) {
+                    Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    intent.setData(Uri.fromFile(video));
+                    getContext().sendBroadcast(intent);
+                }
+
+                if (mCallback != null) {
+                    mCallback.onCameraShot( video );
+                    return;
+                }
+
                 if (mTmpFile != null) {
                     if (maxDuration > 0) {
                         MediaPlayer mediaPlayer = new MediaPlayer();
@@ -489,6 +507,20 @@ public class MultiImageSelectorFragment extends Fragment {
      */
     private void showCameraAction() {
         if (pickerMode == MODE_VIDEO) {
+            File saveDir = FileUtils.getSystemCameraDir(getContext());
+            MaterialCamera materialCamera = new MaterialCamera(this)
+                    .saveDir(saveDir)
+                    .forceCamera1()
+                    .showPortraitWarning(false)
+                    .videoEncodingBitRate((int)(1024000 * 5))
+                    .qualityProfile(MaterialCamera.QUALITY_720P)
+                    .videoPreferredAspect(1920f/1080f);
+            if (maxDuration > 0) {
+                materialCamera.countdownMinutes(maxDuration/60f);
+            }
+
+            materialCamera.start(REQUEST_RECORDING);
+            /*
             Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
             if (maxDuration > 0) {
                 intent.putExtra(android.provider.MediaStore.EXTRA_DURATION_LIMIT, maxDuration);
@@ -517,6 +549,7 @@ public class MultiImageSelectorFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
             }
+            */
             return;
         }
 
@@ -768,12 +801,12 @@ public class MultiImageSelectorFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST_CODE) {
-            if (grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length == 3 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED) {
                 // Permission Granted
                 getActivity().getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
             } else {
                 // Permission Denied
-                Toast.makeText(getActivity(), "在设置-应用-" + getApplicationName() + "-权限中开启相机与储存空间权限，以正常使用拍照", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "在设置-应用-" + getApplicationName() + "-权限中开启相机、录音以及储存空间权限，以正常使用拍照", Toast.LENGTH_SHORT).show();
                 getActivity().finish();
             }
         }

@@ -49,6 +49,22 @@ public class FileUtils {
         return File.createTempFile(prefix, suffix, dir);
     }
 
+    public static File getSystemCameraDir(Context context) {
+        File dir = null;
+        if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+            dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM + "/Camera");
+            if (!dir.exists()) {
+                dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+                if (!dir.exists()) {
+                    dir = getCacheDirectory(context, true);
+                }
+            }
+        } else {
+            dir = getCacheDirectory(context, true);
+        }
+
+        return dir;
+    }
 
     private static final String EXTERNAL_STORAGE_PERMISSION = "android.permission.WRITE_EXTERNAL_STORAGE";
 
