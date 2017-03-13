@@ -82,6 +82,10 @@ public class PreviewActivity extends AppCompatActivity {
             images = (ArrayList<Image>) selectImages.clone();
         }
 
+        if (images.size() == 0) {
+            finish();
+            return;
+        }
         // 完成按钮
         mSubmitButton = (Button) findViewById(R.id.commit);
 

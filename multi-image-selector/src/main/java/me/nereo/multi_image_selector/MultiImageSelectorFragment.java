@@ -510,11 +510,11 @@ public class MultiImageSelectorFragment extends Fragment {
             File saveDir = FileUtils.getSystemCameraDir(getContext());
             MaterialCamera materialCamera = new MaterialCamera(this)
                     .saveDir(saveDir)
-                    .forceCamera1()
                     .showPortraitWarning(false)
-                    .videoEncodingBitRate((int)(1024000 * 5))
-                    .qualityProfile(MaterialCamera.QUALITY_720P)
-                    .videoPreferredAspect(1920f/1080f);
+                    .videoEncodingBitRate((int)(250 * 1024 * 8))
+                    .qualityProfile(MaterialCamera.QUALITY_480P)
+                    .videoPreferredHeight(480)
+                    .forceCamera1();
             if (maxDuration > 0) {
                 materialCamera.countdownMinutes(maxDuration/60f);
             }
